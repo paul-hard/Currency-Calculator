@@ -1,0 +1,39 @@
+<div class="currency__wrapper">
+    <mat-card class="currency__header">
+        <mat-card-title>Currency calculator</mat-card-title>
+        <mat-card-subtitle>Pavlo Hurtovenko</mat-card-subtitle>
+        <div>
+            <p>Daily rate: {{dailyRate.rates.UAH| currency: "USD "}} {{dailyRateEuro.rates.UAH | currency: "
+                EUR "}}</p>
+        </div>
+    </mat-card>
+
+    <div class="currency__board">
+        <mat-card class="currency__card">
+            <mat-form-field>
+                <mat-label class="label">I have:</mat-label>
+                <input matInput type="number" placeholder="Currency" (keyup)="handleAmountInput(input.value)" #input
+                    value="{{userInput.result}}">
+            </mat-form-field>
+            <select (change)="handleCurrencySelectFor($event)" name="currency" class="card__select">
+                <option *ngFor="let currency of currenciesCollection" value="{{currency}}"
+                    [selected]="currency===selectedCurrencyFor">{{currency}}
+                </option>
+            </select>
+        </mat-card>
+
+        <mat-card class="currency__card">
+            <mat-form-field>
+                <mat-label class="label">I recive:</mat-label>
+                <input matInput type="number" placeholder="Currency"
+                    (keyup)="handleAmountInputRevers(inputRevers.value)" #inputRevers
+                    value="{{userInputRevers.result}}">
+            </mat-form-field>
+            <select (change)="handleCurrencySelectTo($event)" name="currency" class="card__select">
+                <option *ngFor="let currency of currenciesCollection" value="{{currency}}"
+                    [selected]="currency===selectedCurrencyTo">{{currency}}
+                </option>
+            </select>
+        </mat-card>
+    </div>
+</div>
