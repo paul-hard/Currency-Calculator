@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GetCurrencyService } from '../get-currency.service'
+import { SelectDetails } from '../select-currency/select-currency.component';
 
 
 @Component({
@@ -12,9 +13,50 @@ export class BoardComponent implements OnInit {
     private service: GetCurrencyService,
   ) { }
 
+  // Refactored version --------------------------------------------------------------------------------------------------------
+
+  currenciesCollection: string[] = [];
+  currentAmount: string = '1';
+  selectedCurrencyFrom: string = 'USD';
+  selectedCurrencyToo: string = 'UAH';
+  toValue: string = ""
+
+  changeAmount(updateAmount: string) {
+    this.currentAmount = updateAmount;
+    this.service.getCurrencyCalc(this.selectedCurrencyFrom, this.selectedCurrencyToo, this.currentAmount).subscribe(response => {
+      this.toValue = response.result
+
+
+
+    })
+  }
+
+
+  displayCurrency(event: SelectDetails) {
+    if (event.direction === 'from') {
+      this.selectedCurrencyFrom = event.currency
+    } else {
+      this.selectedCurrencyToo = event.currency
+    }
+    this.service.getCurrencyCalc(this.selectedCurrencyFrom, this.selectedCurrencyToo, this.currentAmount).subscribe(response => {
+      this.toValue = response.result
+    })
+  }
+
+
+
+
+
+  // Refactored version --------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
   dailyRate: any;
   dailyRateEuro: any;
-  currenciesCollection: any;
+
   selectedCurrencyFor: any = "USD";
   selectedCurrencyTo: any = "UAH";
   userInput: any = ""
@@ -26,6 +68,8 @@ export class BoardComponent implements OnInit {
     //Dislpay USD, take collection of selected currencies
     this.service.getDailyRate().subscribe(response => {
       this.dailyRate = response
+
+
       this.currenciesCollection = Object.keys(this.dailyRate.rates)
     });
 
@@ -61,6 +105,7 @@ export class BoardComponent implements OnInit {
     this.userInput = event
     this.service.getCurrencyCalc(this.selectedCurrencyFor, this.selectedCurrencyTo, event).subscribe(response => {
       this.userInputRevers = response
+      console.log(response);
     })
   }
 
@@ -69,6 +114,7 @@ export class BoardComponent implements OnInit {
     this.userInputRevers = event;
     this.service.getCurrencyCalcRevers(this.selectedCurrencyFor, this.selectedCurrencyTo, event).subscribe(response => {
       this.userInput = response
+
     })
   }
 }

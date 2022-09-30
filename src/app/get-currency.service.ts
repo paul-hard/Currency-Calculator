@@ -1,6 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable, map } from "rxjs";
 
+//able to take response as predefined object; RsJx give us oportunity to perform response as interface object using .map
+export interface ExchangeResult {
+  motd: { msg: string, url: string },
+  success: boolean,
+  query: { from: string, to: string, amount: string },
+  info: { rate: string },
+  historical: false,
+  date: string,
+  result: string,
+}
 
 @Injectable({
   providedIn: 'root'
@@ -23,9 +34,9 @@ export class GetCurrencyService {
   }
 
   //calculate currency exchange
-  getCurrencyCalc(from: string, to: string, amount: string) {
+  getCurrencyCalc(from: string, to: string, amount: string): Observable<ExchangeResult> {
     let url = `https://api.exchangerate.host/convert?from=${from}&to=${to}&amount=${amount}`
-    return this.http.get(url)
+    return this.http.get(url).pipe(map(response => response as ExchangeResult));
   }
 
   //calculate currency exchange reverse
