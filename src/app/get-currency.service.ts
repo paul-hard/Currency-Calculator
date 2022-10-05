@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from "rxjs";
 
-//able to take response as predefined object; RsJx give us oportunity to perform response as interface object using .map
 export interface ExchangeResult {
   motd: { msg: string, url: string },
   success: boolean,
@@ -11,6 +10,19 @@ export interface ExchangeResult {
   historical: false,
   date: string,
   result: string,
+}
+
+export interface DailyRate {
+  base: string,
+  rates: {
+    UAH: string,
+    GBP: string,
+    USD: string,
+    RON: string,
+    TRY: string,
+    PLN: string,
+    EUR: string
+  }
 }
 
 @Injectable({
@@ -24,24 +36,18 @@ export class GetCurrencyService {
   //display UAH/USD rate
   getDailyRate() {
     let url = `https://api.exchangerate.host/latest?base=USD&source=nbu&symbols=UAH,USD,EUR,PLN,GBP,RON,TRY`;
-    return this.http.get(url)
+    return this.http.get(url).pipe(map(response => response as DailyRate));
   }
 
   //display EUR
-  getDailyRateEuro() {
+  getDailyRateEuro(): Observable<DailyRate> {
     let url = `https://api.exchangerate.host/latest?base=EUR&source=nbu&symbols=UAH,USD,EUR,PLN,GBP,RON,TRY`;
-    return this.http.get(url)
+    return this.http.get(url).pipe(map(response => response as DailyRate));
   }
 
   //calculate currency exchange
   getCurrencyCalc(from: string, to: string, amount: string): Observable<ExchangeResult> {
     let url = `https://api.exchangerate.host/convert?from=${from}&to=${to}&amount=${amount}`
     return this.http.get(url).pipe(map(response => response as ExchangeResult));
-  }
-
-  //calculate currency exchange reverse
-  getCurrencyCalcRevers(from: string, to: string, amount: string) {
-    let url = `https://api.exchangerate.host/convert?from=${to}&to=${from}&amount=${amount}`
-    return this.http.get(url)
   }
 }

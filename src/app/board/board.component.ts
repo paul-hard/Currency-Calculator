@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GetCurrencyService } from '../get-currency.service'
 import { SelectDetails } from '../select-currency/select-currency.component';
-
+import { InputDetails } from '../input/input.component';
 
 @Component({
   selector: 'app-board',
@@ -13,108 +13,53 @@ export class BoardComponent implements OnInit {
     private service: GetCurrencyService,
   ) { }
 
-  // Refactored version --------------------------------------------------------------------------------------------------------
 
+  dailyRate: string = "";
+  dailyRateEuro: string = ""
   currenciesCollection: string[] = [];
-  currentAmount: string = '1';
+  currentAmount: string = "";
   selectedCurrencyFrom: string = 'USD';
-  selectedCurrencyToo: string = 'UAH';
-  toValue: string = ""
-
-  changeAmount(updateAmount: string) {
-    this.currentAmount = updateAmount;
-    this.service.getCurrencyCalc(this.selectedCurrencyFrom, this.selectedCurrencyToo, this.currentAmount).subscribe(response => {
-      this.toValue = response.result
-
-
-
-    })
-  }
-
-
-  displayCurrency(event: SelectDetails) {
-    if (event.direction === 'from') {
-      this.selectedCurrencyFrom = event.currency
-    } else {
-      this.selectedCurrencyToo = event.currency
-    }
-    this.service.getCurrencyCalc(this.selectedCurrencyFrom, this.selectedCurrencyToo, this.currentAmount).subscribe(response => {
-      this.toValue = response.result
-    })
-  }
-
-
-
-
-
-  // Refactored version --------------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-  dailyRate: any;
-  dailyRateEuro: any;
-
-  selectedCurrencyFor: any = "USD";
-  selectedCurrencyTo: any = "UAH";
-  userInput: any = ""
-  userInputRevers: any = ""
-  output: any = "";
-  outputRevers: any = ""
+  selectedCurrencyTo: string = 'UAH';
+  toValue: string = "";
+  fromValue: string = "";
 
   ngOnInit() {
     //Dislpay USD, take collection of selected currencies
     this.service.getDailyRate().subscribe(response => {
-      this.dailyRate = response
-
-
-      this.currenciesCollection = Object.keys(this.dailyRate.rates)
+      this.dailyRate = response.rates.UAH
+      this.currenciesCollection = Object.keys(response.rates)
     });
-
     //Display EUR
     this.service.getDailyRateEuro().subscribe(response => {
-      this.dailyRateEuro = response
+      this.dailyRateEuro = response.rates.UAH;
     });
 
-    //Display default resoult USD / UAH
-    this.service.getCurrencyCalc(this.selectedCurrencyFor, this.selectedCurrencyTo, this.userInput).subscribe(response => {
-      this.userInputRevers = response
-    })
+  }
+  changeAmount(event: InputDetails) {
+    this.currentAmount = event.amount;
+    if (event.direction === 'from') {
+      this.service.getCurrencyCalc(this.selectedCurrencyFrom, this.selectedCurrencyTo, this.currentAmount).subscribe(response => {
+        this.toValue = response.result
+      })
+    } else {
+      this.service.getCurrencyCalc(this.selectedCurrencyTo, this.selectedCurrencyFrom, this.currentAmount).subscribe(response => {
+        this.fromValue = response.result
+      })
+    }
   }
 
-  //Select first currency
-  handleCurrencySelectFor(event: any) {
-    this.selectedCurrencyFor = event.target.value
-    this.service.getCurrencyCalc(this.selectedCurrencyFor, this.selectedCurrencyTo, this.userInput).subscribe(response => {
-      this.userInputRevers = response
-    })
+  displayCurrency(event: SelectDetails) {
+    if (event.direction === 'from') {
+      this.selectedCurrencyFrom = event.currency
+      this.service.getCurrencyCalc(this.selectedCurrencyFrom, this.selectedCurrencyTo, this.currentAmount).subscribe(response => {
+        this.toValue = response.result
+      })
+    } else {
+      this.selectedCurrencyTo = event.currency
+      this.service.getCurrencyCalc(this.selectedCurrencyTo, this.selectedCurrencyFrom, this.currentAmount).subscribe(response => {
+        this.fromValue = response.result
+      })
+    }
   }
 
-  //Select second currency
-  handleCurrencySelectTo(event: any) {
-    this.selectedCurrencyTo = event.target.value
-    this.service.getCurrencyCalc(this.selectedCurrencyFor, this.selectedCurrencyTo, this.userInput).subscribe(response => {
-      this.userInputRevers = response
-    })
-  }
-
-  //Input amount 
-  handleAmountInput(event: any) {
-    this.userInput = event
-    this.service.getCurrencyCalc(this.selectedCurrencyFor, this.selectedCurrencyTo, event).subscribe(response => {
-      this.userInputRevers = response
-      console.log(response);
-    })
-  }
-
-  //Revers input amount
-  handleAmountInputRevers(event: any) {
-    this.userInputRevers = event;
-    this.service.getCurrencyCalcRevers(this.selectedCurrencyFor, this.selectedCurrencyTo, event).subscribe(response => {
-      this.userInput = response
-
-    })
-  }
 }

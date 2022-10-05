@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { BoardComponent } from './board/board.component';
@@ -26,7 +27,8 @@ import { SelectCurrencyComponent } from './select-currency/select-currency.compo
     BrowserAnimationsModule,
     MatInputModule,
     MatCardModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

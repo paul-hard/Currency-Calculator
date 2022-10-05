@@ -1,8 +1,5 @@
-<h1>{{title}}</h1>
-
 <mat-form-field>
-    <mat-label class="label">I recive:</mat-label>
+    <mat-label class="label">{{direction === "from"? "I have" : "I recive"}}</mat-label>
     <input required matInput ngModel name="amount" #amount="ngModel" (keyup)="onKeyUp(amount.value)" type="text"
-        placeholder="Amount" pattern="^[0-9]+$">
-    <mat-error *ngIf="amount.errors?.['pattern']">Number required</mat-error>
+        placeholder="Amount" pattern="^[0-9]+$" value="{{direction === 'from'? toValue : fromValue}}">
 </mat-form-field>

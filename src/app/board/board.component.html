@@ -3,55 +3,23 @@
         <mat-card-title>Currency calculator</mat-card-title>
         <mat-card-subtitle>Pavlo Hurtovenko</mat-card-subtitle>
         <div>
-            <p>Daily rate: {{dailyRate.rates.UAH| currency: "USD "}} {{dailyRateEuro.rates.UAH | currency: "
+            <p>Daily rate: {{dailyRate | currency: "USD "}} {{dailyRateEuro | currency: "
                 EUR "}}</p>
         </div>
     </mat-card>
 
     <div class="currency__board">
         <mat-card class="currency__card">
-            <app-input (amountChange)="changeAmount($event)"></app-input>
+            <app-input (amountChange)="changeAmount($event)" [direction]="'from'" [toValue]="fromValue"></app-input>
             <app-select-currency [currenciesCollection]="currenciesCollection" (onSelect)="displayCurrency($event)"
-                [direction]="'from'">
+                [direction]="'from'" [selectedCurrencyFrom]="selectedCurrencyFrom">
             </app-select-currency>
         </mat-card>
         <mat-card class="currency__card">
-            <app-input (amountChange)="changeAmount($event)"></app-input>
+            <app-input (amountChange)="changeAmount($event)" [direction]="'to'" [fromValue]="toValue"></app-input>
             <app-select-currency [currenciesCollection]="currenciesCollection" (onSelect)="displayCurrency($event)"
-                [direction]="'to'">
+                [direction]="'to'" [selectedCurrencyTo]="selectedCurrencyTo">
             </app-select-currency>
         </mat-card>
     </div>
-    <span>From schild component: {{currentAmount}}</span>
-    <div>{{selectedCurrencyFrom}}</div>
-    <div>{{selectedCurrencyToo}}</div>
-    <div style="text-align: center">{{toValue | json}}</div>
-
-
-
 </div>
-
-
-
-<!-- <mat-form-field>
-    <mat-label class="label">I have:</mat-label>
-    <input matInput type="number" placeholder="Currency" (keyup)="handleAmountInput(input.value)" #input
-        value="{{userInput.result}}">
-</mat-form-field>
-<select (change)="handleCurrencySelectFor($event)" name="currency" class="card__select">
-    <option *ngFor="let currency of currenciesCollection" value="{{currency}}"
-        [selected]="currency===selectedCurrencyFor">{{currency}}
-    </option>
-</select>
-
-
-<mat-form-field>
-    <mat-label class="label">I recive:</mat-label>
-    <input matInput type="text" placeholder="Currency" (keyup)="handleAmountInputRevers(inputRevers.value)" #inputRevers
-        value="{{userInputRevers.result}}">
-</mat-form-field>
-<select (change)="handleCurrencySelectTo($event)" name="currency" class="card__select">
-    <option *ngFor="let currency of currenciesCollection" value="{{currency}}"
-        [selected]="currency===selectedCurrencyTo">{{currency}}
-    </option>
-</select> -->

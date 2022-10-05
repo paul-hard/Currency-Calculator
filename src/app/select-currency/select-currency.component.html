@@ -1,8 +1,9 @@
 <div>
     <div>
         <select ngModel name="currency" #currency="ngModel" (change)="currencySelect(currency.value)"
-            class="card__select">
-            <option *ngFor="let currency of currenciesCollection" value="{{currency}}">
+            class="card__select" value="currency.value">
+            <option *ngFor="let currency of currenciesCollection"
+                [selected]="direction === 'from'? currency === selectedCurrencyFrom : currency === selectedCurrencyTo">
                 {{currency}}
             </option>
         </select>

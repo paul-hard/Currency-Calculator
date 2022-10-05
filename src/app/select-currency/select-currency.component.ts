@@ -4,6 +4,7 @@ import { Component, Input, EventEmitter, Output } from '@angular/core';
 //require service configuration
 export interface SelectDetails {
   currency: string,
+  //to recognize which select field was in usage
   direction: string | undefined
 }
 
@@ -14,18 +15,15 @@ export interface SelectDetails {
 })
 export class SelectCurrencyComponent {
 
-
-  //in porpouse of rendering currencies list
+  @Input() selectedCurrencyFrom: string = 'USD';
+  @Input() selectedCurrencyTo: string = 'UAH';
   @Input() currenciesCollection: string[] = [];
-  @Input() direction?: string
+  @Input() direction?: string;
   //send to parent for further calculation
   @Output() onSelect: EventEmitter<SelectDetails> = new EventEmitter();
 
-  ngOnInit(): void {
-  }
 
   currencySelect(event: string) {
-    console.log(event)
     this.onSelect.emit({ currency: event, direction: this.direction });
   }
 
